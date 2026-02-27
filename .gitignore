@@ -3,5 +3,9 @@ node_modules
 dist
 build
 __pycache__
+<<<<<<< HEAD
 *.log
 git add .
+=======
+*.log
+>>>>>>> e1501262dbb699f60254042b991efb581c5a3681
