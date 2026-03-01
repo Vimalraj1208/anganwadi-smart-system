@@ -1,0 +1,66 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: #1e3a8a;
+  padding: 0 60px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: #facc15;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;   /* 👈 proper spacing */
+}
+
+.get-started,
+.login,
+.register {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.get-started {
+  background: #facc15;
+}
+
+.login {
+  background: white;
+  color: #1e3a8a;
+}
+
+.register {
+  background: #facc15;
+}

@@ -1,0 +1,137 @@
+.login-container {
+  margin-top: 70px;
+  height: calc(100vh - 140px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6fb;
+}
+
+.login-card {
+  width: 360px;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1e3a8a;
+}
+
+.login-card input {
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: #1e3a8a;
+}
+
+.captcha-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.captcha-text {
+  font-weight: bold;
+  font-size: 18px;
+  background: #eee;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.captcha-box button {
+  margin-left: 5px;
+  border: none;
+  background: #1e3a8a;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.login-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #1e3a8a;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background: #162e6f;
+}
+.login-container {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f6fb;
+}
+
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  width: 350px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.captcha-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.captcha-text {
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.small-btn {
+  padding: 6px 10px;
+  border: none;
+  background-color: #2d4c9c;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #2d4c9c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  font-size: 14px;
+}
