@@ -16,15 +16,15 @@ const Navbar = () => {
         <Link to="/setting">Setting</Link>
       </div>
 
- <div className="auth-buttons">
-  <Link to="/register">
-    <button className="get-started">Get Started</button>
-  </Link>
+      <div className="auth-buttons">
+        <Link to="/teacher-register" className="get-started">
+          Get Started
+        </Link>
 
-  <Link to="/login">
-    <button className="login">Login</button>
-  </Link>
-</div>
+        <Link to="/login" className="login">
+          Login
+        </Link>
+      </div>
     </div>
   );
 };

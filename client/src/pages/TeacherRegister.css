@@ -1,0 +1,117 @@
+/* Full page background */
+.teacher-container {
+  min-height: 100vh;
+  background: url("../assets/classroom.jpg") no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+/* Form card */
+.teacher-card {
+  width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+/* Title */
+.teacher-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  background: #eee;
+  padding: 8px;
+  border-radius: 20px;
+}
+
+/* Input fields */
+.teacher-card input,
+.teacher-card select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 20px;
+  border: none;
+  background: #eee;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Aadhaar section */
+.aadhaar-row {
+  display: flex;
+  gap: 8px;
+}
+
+.aadhaar-row input {
+  flex: 1;
+}
+
+.fetch-btn {
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: none;
+  background: #1e3a8a;
+  color: white;
+  cursor: pointer;
+}
+
+/* Location button */
+.location-row {
+  display: flex;
+  gap: 8px;
+}
+
+.location-btn {
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  background: #1e3a8a;
+  color: white;
+  cursor: pointer;
+}
+
+/* Captcha section */
+.captcha-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #eee;
+  padding: 8px;
+  border-radius: 20px;
+  margin-top: 8px;
+}
+
+.captcha-text {
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.captcha-actions button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Register button */
+.register-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 20px;
+  border: none;
+  background: #1e3a8a;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.register-btn:hover {
+  background: #162c6e;
+}
