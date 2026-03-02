@@ -1,12 +1,14 @@
-.home-hero {
-  margin-top: 70px;          /* navbar height */
-  height: calc(100vh - 140px); /* navbar + footer */
+.home-container {
   width: 100%;
+  height: 90vh; /* Adjust if needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
 }
 
-.home-hero img {
+.home-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;   /* fills perfectly */
+  object-fit: cover; /* Keeps image ratio perfect */
 }

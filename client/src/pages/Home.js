@@ -1,11 +1,10 @@
 import React from "react";
-import classroom from "../assets/classroom.jpg";
 import "./Home.css";
 
 const Home = () => {
   return (
-    <div className="home-hero">
-      <img src={classroom} alt="Anganwadi" />
+    <div className="home-container">
+      <img src="/bg.jpg" alt="Background" className="home-image" />
     </div>
   );
 };
