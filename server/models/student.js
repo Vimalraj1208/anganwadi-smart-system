@@ -1,17 +1,37 @@
 const mongoose = require("mongoose");
 
-const studentSchema = new mongoose.Schema({
-  name: String,
-  age: Number,
-  parentName: String,
-  parentPhone: String,
+const studentSchema = new mongoose.Schema(
+  {
+    aadhaarNumber: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    fullName: String,
+    dob: Date,
+    gender: String,
+    fatherName: String,
+    motherName: String,
+    fatherNumber: String,
+    motherNumber: String,
+    email: String,
+    location: String,
+    height: Number,
+    weight: Number,
 
-  studentCode: {
-    type: String,
-    required: true,
-    unique: true
-  }
+    studentId: {
+      type: String,
+      unique: true
+    },
 
-}, { timestamps: true });
+    qrCode: String,
+
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Teacher"
+    }
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Student", studentSchema);

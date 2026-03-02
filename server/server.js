@@ -3,10 +3,6 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
-// Routes
-const authRoutes = require("./routes/authRoutes");
-const attendanceRoutes = require("./routes/attendanceRoutes");
-
 // Load environment variables
 dotenv.config();
 
@@ -23,6 +19,13 @@ app.use(cors());
 app.use(express.json());
 
 // ======================
+// ROUTES IMPORT
+// ======================
+const authRoutes = require("./routes/authRoutes");
+const attendanceRoutes = require("./routes/attendanceRoutes");
+const studentRoutes = require("./routes/studentRoutes");
+
+// ======================
 // ROOT ROUTE
 // ======================
 app.get("/", (req, res) => {
@@ -37,9 +40,10 @@ app.get("/", (req, res) => {
 // ======================
 app.use("/api/auth", authRoutes);
 app.use("/api/attendance", attendanceRoutes);
+app.use("/api/students", studentRoutes);
 
 // ======================
-// 404 HANDLER
+// 404 HANDLER (MUST BE LAST)
 // ======================
 app.use((req, res) => {
   res.status(404).json({
