@@ -1,137 +1,104 @@
+/* Background */
 .login-container {
-  margin-top: 70px;
-  height: calc(100vh - 140px);
+  height: 90vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f4f6fb;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.login-card {
-  width: 360px;
-  padding: 40px;
-  background: white;
+/* Card */
+.login-box {
+  width: 380px;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.95); /* slight transparency */
   border-radius: 12px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-}
-
-.login-card h2 {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+
+/* Title */
+.login-box h2 {
   margin-bottom: 25px;
-  color: #1e3a8a;
+  font-weight: 600;
+  color: #2d4ca1;
 }
 
-.login-card input {
+/* Inputs */
+.login-box input {
+  width: 100%;
   padding: 12px;
-  margin-bottom: 15px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.login-card input:focus {
+  border: 1px solid #ddd;
   outline: none;
-  border-color: #1e3a8a;
+  font-size: 14px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
 }
 
+.login-box input:focus {
+  border-color: #2d4ca1;
+  box-shadow: 0 0 0 2px rgba(45, 76, 161, 0.1);
+}
+
+/* Password */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.password-wrapper input {
+  padding: 12px 45px 12px 12px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Captcha */
 .captcha-box {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
 }
 
 .captcha-text {
   font-weight: bold;
-  font-size: 18px;
-  background: #eee;
-  padding: 8px 12px;
-  border-radius: 6px;
+  letter-spacing: 2px;
+  font-size: 16px;
 }
 
 .captcha-box button {
+  padding: 6px 8px;
   margin-left: 5px;
   border: none;
-  background: #1e3a8a;
-  color: white;
-  padding: 6px 10px;
   border-radius: 6px;
+  background: #eef2ff;
   cursor: pointer;
 }
 
+/* Button */
 .login-btn {
+  width: 100%;
   padding: 12px;
+  background: linear-gradient(to right, #2d4ca1, #4e73df);
+  color: white;
   border: none;
   border-radius: 8px;
-  background: #1e3a8a;
-  color: white;
-  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .login-btn:hover {
-  background: #162e6f;
-}
-.login-container {
-  height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f4f6fb;
-}
-
-.login-card {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  width: 350px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.login-card input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.captcha-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 10px 0;
-}
-
-.captcha-text {
-  font-weight: bold;
-  font-size: 18px;
-  letter-spacing: 2px;
-}
-
-.small-btn {
-  padding: 6px 10px;
-  border: none;
-  background-color: #2d4c9c;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.login-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: #2d4c9c;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.error-text {
-  color: red;
-  font-size: 14px;
+  opacity: 0.9;
 }

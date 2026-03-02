@@ -1,129 +1,106 @@
 import React, { useState, useEffect } from "react";
 import "./Login.css";
+import bgImage from "../assets/bg.jpg";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRetype, setShowRetype] = useState(false);
   const [captcha, setCaptcha] = useState("");
-  const [captchaInput, setCaptchaInput] = useState("");
-  const [error, setError] = useState("");
+  const [userCaptcha, setUserCaptcha] = useState("");
 
-  // Generate random captcha
   const generateCaptcha = () => {
     const chars =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
+    let newCaptcha = "";
     for (let i = 0; i < 6; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+      newCaptcha += chars.charAt(
+        Math.floor(Math.random() * chars.length)
+      );
     }
-    setCaptcha(result);
+    setCaptcha(newCaptcha);
   };
 
-  // Generate on first load
+  const speakCaptcha = () => {
+    const speech = new SpeechSynthesisUtterance(captcha);
+    speech.lang = "en-US";
+    window.speechSynthesis.speak(speech);
+  };
+
   useEffect(() => {
     generateCaptcha();
   }, []);
 
-  // Voice captcha
-  const speakCaptcha = () => {
-    const msg = new SpeechSynthesisUtterance(captcha.split("").join(" "));
-    window.speechSynthesis.speak(msg);
-  };
-
-  // Handle Login
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    setError("");
-
-    if (captchaInput !== captcha) {
-      setError("Captcha Incorrect");
+    if (userCaptcha !== captcha) {
+      alert("Captcha incorrect!");
       generateCaptcha();
       return;
     }
-
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username,
-            password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Login Successful");
-        console.log(data);
-      } else {
-        setError(data.message || "Login Failed");
-      }
-    } catch (err) {
-      setError("Server not reachable");
-    }
+    alert("Login Success (Demo)");
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2>Login</h2>
+    <div
+      className="login-container"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      <div className="login-box">
+        <h2>LOGIN</h2>
 
         <form onSubmit={handleLogin}>
           <input
             type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username / Student ID"
             required
           />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              required
+            />
+            <span
+              className="eye-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "👁️‍🗨️" : "👁️"}
+            </span>
+          </div>
 
-          {/* Captcha Display */}
+          <div className="password-wrapper">
+            <input
+              type={showRetype ? "text" : "password"}
+              placeholder="Re-type Password"
+              required
+            />
+            <span
+              className="eye-icon"
+              onClick={() => setShowRetype(!showRetype)}
+            >
+              {showRetype ? "👁️‍🗨️" : "👁️"}
+            </span>
+          </div>
+
           <div className="captcha-box">
             <span className="captcha-text">{captcha}</span>
-
-            <button
-              type="button"
-              onClick={generateCaptcha}
-              className="small-btn"
-            >
-              🔄
-            </button>
-
-            <button
-              type="button"
-              onClick={speakCaptcha}
-              className="small-btn"
-            >
-              🔊
-            </button>
+            <div>
+              <button type="button" onClick={generateCaptcha}>⟳</button>
+              <button type="button" onClick={speakCaptcha}>🔊</button>
+            </div>
           </div>
 
           <input
             type="text"
             placeholder="Enter Captcha"
-            value={captchaInput}
-            onChange={(e) => setCaptchaInput(e.target.value)}
+            value={userCaptcha}
+            onChange={(e) => setUserCaptcha(e.target.value)}
             required
           />
 
-          {error && <p className="error-text">{error}</p>}
-
-          <button type="submit" className="login-btn">
-            Login
+          <button className="login-btn" type="submit">
+            LOGIN
           </button>
         </form>
       </div>
