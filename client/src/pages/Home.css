@@ -1,14 +1,157 @@
 .home-container {
   width: 100%;
-  height: 90vh; /* Adjust if needed */
+}
+
+/* HERO SECTION */
+.hero-section {
+  height: 85vh;
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 60px;
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+  max-width: 900px;
+}
+
+.typing-text {
+  font-size: 32px;
+  margin-bottom: 15px;
+  border-right: 2px solid white;
+  white-space: nowrap;
   overflow: hidden;
 }
 
-.home-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Keeps image ratio perfect */
+.sliding-text {
+  font-size: 20px;
+  margin-bottom: 30px;
+  color: #facc15;
+  animation: fadeSlide 0.6s ease-in-out;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* EXPLORE BUTTON */
+.explore-btn {
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  background: #facc15;
+  color: black;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.explore-btn:hover {
+  background: #eab308;
+}
+
+/* ABOUT SECTION */
+.about-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 80px 10%;
+  background: #f8f9fd;
+  gap: 40px;
+}
+
+.about-left {
+  flex: 1;
+}
+
+.about-left h2 {
+  margin-bottom: 20px;
+  color: #2d4ca1;
+}
+
+.about-left p {
+  margin-bottom: 15px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.about-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+  font-weight: 500;
+}
+
+/* AI SECTION */
+.ai-section {
+  padding: 80px 10%;
+  text-align: center;
+  background: white;
+}
+
+.ai-section h2 {
+  margin-bottom: 40px;
+  color: #2d4ca1;
+}
+
+.ai-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.ai-card {
+  flex: 1;
+  padding: 25px;
+  border-radius: 12px;
+  background: #f4f6fb;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+}
+
+.ai-card h3 {
+  margin-bottom: 15px;
+  color: #2d4ca1;
+}
+
+/* VISION SECTION */
+.vision-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 80px 10%;
+  background: #f8f9fd;
+  gap: 30px;
+}
+
+.vision-card {
+  flex: 1;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+}
+
+.vision-card h3 {
+  margin-bottom: 15px;
+  color: #2d4ca1;
 }
