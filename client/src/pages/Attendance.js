@@ -1,245 +1,108 @@
-import React, { useState, useEffect } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
-import "./Attendance.css";
+import React, { useState } from "react";
+import "../styles/Attendance.css";
 
-const Attendance = () => {
-  const [studentData, setStudentData] = useState({
-    aadhaar: "",
-    name: "",
-    username: "",
-    password: "",
-    location: ""
-  });
+import AddStudentModal from "../components/AddStudentModal";
+import FaceCamera from "../components/FaceCamera";
+import QRScanner from "../components/QRScanner";
+import AttendanceDashboard from "../components/AttendanceDashboard";
 
-  const [showScanner, setShowScanner] = useState(false);
-  const [scannerInstance, setScannerInstance] = useState(null);
-  const [message, setMessage] = useState("");
+function Attendance() {
 
-  /* ---------------- LOCATION ---------------- */
+const [showAddStudent,setShowAddStudent] = useState(false)
+const [activeFeature,setActiveFeature] = useState(null)
 
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setStudentData((prev) => ({
-            ...prev,
-            location: `Lat: ${position.coords.latitude}, Lng: ${position.coords.longitude}`
-          }));
-        },
-        () => alert("Location permission denied")
-      );
-    }
-  };
+const openFeature = (feature)=>{
+setActiveFeature(feature)
+}
 
-  useEffect(() => {
-    getLocation();
-  }, []);
+return (
 
-  /* ---------------- QR SCANNER ---------------- */
+<div className="attendance-page">
 
-  useEffect(() => {
-    let scanner;
+{/* Title */}
+<h2 className="attendance-title">Attendance Management</h2>
 
-    if (showScanner) {
-      scanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: 250 },
-        false
-      );
 
-      setScannerInstance(scanner);
+{/* Feature Grid */}
 
-      scanner.render(
-        (decodedText) => {
-          setStudentData((prev) => ({
-            ...prev,
-            aadhaar: decodedText
-          }));
+<div className="feature-grid">
 
-          // Auto stop after 5 seconds
-          setTimeout(() => {
-            scanner.clear();
-            setShowScanner(false);
-          }, 5000);
-        },
-        (error) => {
-          console.warn(error);
-        }
-      );
-    }
+<div
+className="feature-card"
+onClick={()=>setShowAddStudent(true)}
+>
+<h3>➕ Add Student</h3>
+<p>Register new child & generate QR</p>
+</div>
 
-    return () => {
-      if (scanner) {
-        scanner.clear().catch(() => {});
-      }
-    };
-  }, [showScanner]);
 
-  /* ---------------- INPUT CHANGE ---------------- */
+<div
+className="feature-card"
+onClick={()=>openFeature("qr")}
+>
+<h3>📷 QR Attendance</h3>
+<p>Scan student QR to mark present</p>
+</div>
 
-  const handleChange = (e) => {
-    setStudentData({
-      ...studentData,
-      [e.target.name]: e.target.value
-    });
-  };
 
-  /* ---------------- DUMMY FETCH ---------------- */
+<div
+className="feature-card"
+onClick={()=>openFeature("face")}
+>
+<h3>😊 Check In / Out</h3>
+<p>Face recognition attendance</p>
+</div>
 
-  const fetchStudent = () => {
-    if (studentData.aadhaar.length !== 12) {
-      alert("Enter valid 12-digit Aadhaar");
-      return;
-    }
 
-    // Temporary dummy data (replace with backend later)
-    setStudentData((prev) => ({
-      ...prev,
-      name: "Demo Student"
-    }));
-  };
+<div
+className="feature-card"
+onClick={()=>openFeature("dashboard")}
+>
+<h3>📊 Dashboard</h3>
+<p>View attendance statistics</p>
+</div>
 
-  /* ---------------- MARK ATTENDANCE ---------------- */
+</div>
 
-  const markAttendance = (e) => {
-    e.preventDefault();
 
-    if (!studentData.username || !studentData.password) {
-      setMessage("Enter Username & Password");
-      return;
-    }
+{/* Feature Area */}
 
-    setMessage("Attendance Marked Successfully ✅");
+<div className="feature-display">
 
-    setStudentData((prev) => ({
-      ...prev,
-      aadhaar: "",
-      name: "",
-      username: "",
-      password: ""
-    }));
-  };
+{activeFeature === "qr" && (
+<div className="feature-box">
+<h3>QR Attendance Scanner</h3>
+<QRScanner/>
+</div>
+)}
 
-  /* ---------------- MANUAL STOP ---------------- */
+{activeFeature === "face" && (
+<div className="feature-box">
+<h3>Face Recognition Camera</h3>
+<FaceCamera/>
+</div>
+)}
 
-  const stopScanner = () => {
-    if (scannerInstance) {
-      scannerInstance.clear();
-    }
-    setShowScanner(false);
-  };
+{activeFeature === "dashboard" && (
+<div className="feature-box">
+<h3>Attendance Dashboard</h3>
+<AttendanceDashboard/>
+</div>
+)}
 
-  return (
-    <div className="attendance-container">
-      <div className="attendance-card">
-        <h2>Student Attendance</h2>
+</div>
 
-        <form onSubmit={markAttendance}>
 
-          {/* Scan Button */}
-          <button
-            type="button"
-            onClick={() => setShowScanner(true)}
-          >
-            Scan Aadhaar / QR
-          </button>
+{/* Add Student Modal */}
 
-          {/* Scanner View */}
-          {showScanner && (
-            <>
-              <div id="reader" style={{ marginTop: "20px" }}></div>
+{showAddStudent && (
+<AddStudentModal closeModal={()=>setShowAddStudent(false)} />
+)}
 
-              <button
-                type="button"
-                style={{
-                  marginTop: "10px",
-                  background: "red",
-                  color: "white"
-                }}
-                onClick={stopScanner}
-              >
-                Stop Scanner
-              </button>
-            </>
-          )}
+</div>
 
-          {/* Aadhaar */}
-          <input
-            type="text"
-            name="aadhaar"
-            placeholder="Aadhaar Number"
-            value={studentData.aadhaar}
-            onChange={handleChange}
-            required
-          />
+)
 
-          <button
-            type="button"
-            onClick={fetchStudent}
-          >
-            Fetch Student
-          </button>
-
-          {/* Student Name */}
-          <input
-            type="text"
-            name="name"
-            placeholder="Student Name"
-            value={studentData.name}
-            readOnly
-          />
-
-          {/* Location */}
-          <input
-            type="text"
-            name="location"
-            placeholder="Current Location"
-            value={studentData.location}
-            readOnly
-          />
-
-          <button
-            type="button"
-            onClick={getLocation}
-          >
-            Get Current Location
-          </button>
-
-          {/* Username */}
-          <input
-            type="text"
-            name="username"
-            placeholder="Student Username"
-            value={studentData.username}
-            onChange={handleChange}
-            required
-          />
-
-          {/* Password */}
-          <input
-            type="password"
-            name="password"
-            placeholder="Student Password"
-            value={studentData.password}
-            onChange={handleChange}
-            required
-          />
-
-          {/* Submit */}
-          <button type="submit">
-            Mark Attendance
-          </button>
-
-        </form>
-
-        {message && (
-          <p style={{ color: "green", marginTop: "15px" }}>
-            {message}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-};
+}
 
 export default Attendance;
