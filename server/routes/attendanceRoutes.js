@@ -1,9 +1,23 @@
 const express = require("express");
-const { markAttendance } = require("../controllers/attendanceController");
-const protect = require("../middleware/authMiddleware");
-
 const router = express.Router();
 
-router.post("/mark", protect, markAttendance);
+// Controllers
+const {
+  markAttendance,
+  todayStats
+} = require("../controllers/attendanceController");
+
+
+// =============================
+// MARK ATTENDANCE (QR Scan)
+// =============================
+router.post("/mark", markAttendance);
+
+
+// =============================
+// TODAY DASHBOARD STATS
+// =============================
+router.get("/today", todayStats);
+
 
 module.exports = router;

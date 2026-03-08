@@ -1,35 +1,51 @@
 const Student = require("../models/student");
 const QRCode = require("qrcode");
 
-// Register Student
 exports.registerStudent = async (req, res) => {
   try {
+
     const data = req.body;
 
-    // Generate Unique Student ID
-    const count = await Student.countDocuments();
-    const year = new Date().getFullYear().toString().slice(-2);
+    console.log("Received Data:", data);
 
-    const studentId = `ANGAN2K${year}${(count + 1)
-      .toString()
-      .padStart(3, "0")}`;
+    // username = studentId
+    const studentId = data.username;
 
-    // Generate QR Code
+    // QR generate
     const qrCode = await QRCode.toDataURL(studentId);
 
-    const student = await Student.create({
-      ...data,
-      studentId,
-      qrCode,
-      createdBy: req.user.id
+    const student = new Student({
+      aadhaarNumber: data.aadhaarNumber,
+      fullName: data.fullName,
+      fatherName: data.fatherName,
+      motherName: data.motherName,
+      fatherNumber: data.fatherNumber,
+      motherNumber: data.motherNumber,
+      gender: data.gender,
+      dob: data.dob,
+      email: data.email,
+      height: data.height,
+      weight: data.weight,
+      studentId: studentId,
+      qrCode: qrCode
     });
 
+    await student.save();
+
+    console.log("Student Saved:", student);
+
     res.status(201).json({
-      message: "Student Registered Successfully",
+      message: "Student Registered",
       student
     });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+
+    console.log("Error:", error);
+
+    res.status(500).json({
+      message: error.message
+    });
+
   }
 };

@@ -1,19 +1,23 @@
 const Attendance = require("../models/attendance");
 const Student = require("../models/student");
 
+// FIX fetch for NodeJS
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
+
+// =========================
+// MARK ATTENDANCE
+// =========================
+
 exports.markAttendance = async (req, res) => {
+
   try {
-    const { studentCode } = req.body;
 
-    // 1️⃣ Check studentCode provided
-    if (!studentCode) {
-      return res.status(400).json({
-        message: "Student code is required"
-      });
-    }
+    const { studentId } = req.body;
 
-    // 2️⃣ Find student using studentCode
-    const student = await Student.findOne({ studentCode });
+    // find student
+    const student = await Student.findOne({ studentId });
 
     if (!student) {
       return res.status(404).json({
@@ -21,38 +25,110 @@ exports.markAttendance = async (req, res) => {
       });
     }
 
-    // 3️⃣ Set today date (00:00:00 format)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = new Date().toISOString().split("T")[0];
 
-    // 4️⃣ Check duplicate attendance
-    const existing = await Attendance.findOne({
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+
+    // check already marked
+    const exist = await Attendance.findOne({
       studentId: student._id,
-      date: today
+      date: {
+        $gte: today,
+        $lt: tomorrow
+      }
     });
 
-    if (existing) {
-      return res.status(400).json({
-        message: "Attendance already marked today"
+    if (exist) {
+      return res.json({
+        message: "Already marked"
       });
     }
 
-    // 5️⃣ Create attendance
-    const attendance = await Attendance.create({
+
+    // save attendance
+    const attendance = new Attendance({
       studentId: student._id,
       date: today,
-      markedBy: req.user.id
+      status: "present"
     });
 
-    res.status(201).json({
-      message: "Attendance Marked Successfully",
-      attendance
+    await attendance.save();
+
+
+    // =========================
+    // SEND DATA TO N8N
+    // =========================
+
+    await fetch("http://localhost:5678/webhook/attendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        studentName: student.fullName,
+        fatherNumber: student.fatherNumber,
+        status: "Present",
+        time: new Date()
+      })
     });
 
-  } catch (error) {
+
+    res.json({
+      message: "Attendance Marked"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
     res.status(500).json({
-      message: "Server Error",
-      error: error.message
+      message: "Server error"
     });
+
   }
+
+};
+
+
+
+// =========================
+// TODAY DASHBOARD STATS
+// =========================
+
+exports.todayStats = async (req, res) => {
+
+  try {
+
+    const today = new Date().toISOString().split("T")[0];
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const total = await Student.countDocuments();
+
+    const present = await Attendance.countDocuments({
+      date: {
+        $gte: today,
+        $lt: tomorrow
+      }
+    });
+
+    res.json({
+      total,
+      present,
+      absent: total - present
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Server error"
+    });
+
+  }
+
 };
