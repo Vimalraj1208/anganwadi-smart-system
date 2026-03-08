@@ -1,20 +1,18 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as faceapi from "face-api.js";
 
-const FaceTrainer = ({ studentName }) => {
+const FaceTrainer = ({ studentId }) => {
 
-const videoRef = useRef();
-const [captured, setCaptured] = useState(false);
+const videoRef = useRef(null);
+const [saved,setSaved] = useState(false);
 
-useEffect(() => {
-
+useEffect(()=>{
 loadModels();
-
-}, []);
+},[]);
 
 const loadModels = async () => {
 
-const MODEL_URL = "/models";
+const MODEL_URL="/models";
 
 await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
 await faceapi.nets.faceLandmark68TinyNet.loadFromUri(MODEL_URL);
@@ -26,8 +24,7 @@ startCamera();
 
 const startCamera = async () => {
 
-const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-
+const stream = await navigator.mediaDevices.getUserMedia({ video:true });
 videoRef.current.srcObject = stream;
 
 };
@@ -40,40 +37,38 @@ const detection = await faceapi
 .withFaceDescriptor();
 
 if(!detection){
-
 alert("Face not detected");
-
 return;
-
 }
 
 const descriptor = Array.from(detection.descriptor);
 
-localStorage.setItem(studentName, JSON.stringify(descriptor));
+const faces = JSON.parse(localStorage.getItem("faces")) || [];
 
-setCaptured(true);
+faces.push({
+studentId,
+descriptor
+});
+
+localStorage.setItem("faces",JSON.stringify(faces));
+
+setSaved(true);
 
 };
 
-return (
+return(
 
 <div>
 
-<h3>Train Face for {studentName}</h3>
+<h3>Train Face</h3>
 
-<video
-ref={videoRef}
-autoPlay
-width="320"
-/>
+<video ref={videoRef} autoPlay width="300"/>
 
 <br/>
 
-<button onClick={captureFace}>
-Capture Face
-</button>
+<button onClick={captureFace}>Capture Face</button>
 
-{captured && <p>Face Saved ✅</p>}
+{saved && <p>Face Saved ✅</p>}
 
 </div>
 

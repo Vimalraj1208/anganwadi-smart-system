@@ -2,42 +2,49 @@ import React, { useState, useEffect } from "react";
 import "./TeacherRegister.css";
 
 const TeacherRegister = () => {
+
   const [form, setForm] = useState({
     aadhaar: "",
     fullName: "",
     dob: "",
     gender: "",
     email: "",
+    phoneNumber: "",
     location: "",
+    area: "",
+    taluk: "",
+    district: "",
     username: "",
     password: "",
-    rePassword: "",
+    rePassword: ""
   });
 
   const [captcha, setCaptcha] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
 
-  // ---------------- INIT ----------------
-
   useEffect(() => {
     generateCaptcha();
   }, []);
 
-  // ---------------- HANDLE INPUT ----------------
-
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
   };
 
-  // ---------------- CAPTCHA ----------------
+  // CAPTCHA
 
   const generateCaptcha = () => {
     const chars =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
     let cap = "";
+
     for (let i = 0; i < 6; i++) {
       cap += chars[Math.floor(Math.random() * chars.length)];
     }
+
     setCaptcha(cap);
   };
 
@@ -47,61 +54,96 @@ const TeacherRegister = () => {
     window.speechSynthesis.speak(speech);
   };
 
-  // ---------------- LOCATION ----------------
+  // LOCATION DETECT
 
   const detectLocation = () => {
+
     if (!navigator.geolocation) {
       alert("Geolocation not supported");
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
+    navigator.geolocation.getCurrentPosition(async (position) => {
 
-        try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await res.json();
-          setForm((prev) => ({
-            ...prev,
-            location: data.display_name,
-          }));
-        } catch {
-          setForm((prev) => ({
-            ...prev,
-            location: `Lat: ${latitude}, Lng: ${longitude}`,
-          }));
-        }
-      },
-      () => alert("Location permission denied")
-    );
+      const { latitude, longitude } = position.coords;
+
+      try {
+
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        );
+
+        const data = await res.json();
+        const address = data.address;
+
+        setForm((prev) => ({
+          ...prev,
+          location: data.display_name,
+          area: address.suburb || address.village || address.hamlet || "",
+          taluk: address.county || "",
+          district: address.state_district || address.district || ""
+        }));
+
+      } catch {
+
+        alert("Location detection failed");
+
+      }
+
+    });
+
   };
 
-  // ---------------- FETCH AADHAAR ----------------
+  // FETCH AADHAAR
 
   const fetchDetails = async () => {
+
+    if (!form.aadhaar) {
+      alert("Enter Aadhaar number");
+      return;
+    }
+
     try {
+
       const res = await fetch(
-        `http://localhost:5000/api/teacher/fetch/${form.aadhaar}`
+        "http://localhost:5000/api/auth/fetch-aadhaar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            aadhaarNumber: form.aadhaar
+          })
+        }
       );
+
       const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
 
       setForm((prev) => ({
         ...prev,
-        fullName: data.fullName || "",
+        fullName: data.name || "",
         dob: data.dob || "",
-        gender: data.gender || "",
+        gender: data.gender || ""
       }));
+
     } catch {
+
       alert("Failed to fetch Aadhaar details");
+
     }
+
   };
 
-  // ---------------- SUBMIT ----------------
+  // REGISTER
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     if (form.password !== form.rePassword) {
@@ -116,34 +158,65 @@ const TeacherRegister = () => {
     }
 
     try {
+
       const res = await fetch(
-        "http://localhost:5000/api/teacher/register",
+        "http://localhost:5000/api/auth/register",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+
+            aadhaarNumber: form.aadhaar,
+            name: form.fullName,
+            phoneNumber: form.phoneNumber,
+            email: form.email,
+            location: form.location,
+            area: form.area,
+            taluk: form.taluk,
+            district: form.district,
+            username: form.username,
+            password: form.password
+
+          })
+
         }
       );
 
       const data = await res.json();
 
       if (res.ok) {
+
         alert("Teacher Registered Successfully");
+
       } else {
-        alert(data.message || "Registration failed");
+
+        alert(data.message);
+
       }
+
     } catch {
+
       alert("Server Error");
+
     }
+
   };
 
   return (
+
     <div className="teacher-container">
+
       <div className="teacher-card">
+
         <div className="teacher-title">Register</div>
 
-        {/* Aadhaar Row */}
+        {/* Aadhaar */}
+
         <div className="aadhaar-row">
+
           <input
             type="text"
             name="aadhaar"
@@ -151,9 +224,11 @@ const TeacherRegister = () => {
             value={form.aadhaar}
             onChange={handleChange}
           />
+
           <button className="fetch-btn" onClick={fetchDetails}>
             Fetch Details
           </button>
+
         </div>
 
         <input
@@ -164,7 +239,12 @@ const TeacherRegister = () => {
           readOnly
         />
 
-        <input type="date" name="dob" value={form.dob} readOnly />
+        <input
+          type="date"
+          name="dob"
+          value={form.dob}
+          readOnly
+        />
 
         <input
           type="text"
@@ -175,6 +255,14 @@ const TeacherRegister = () => {
         />
 
         <input
+          type="text"
+          name="phoneNumber"
+          placeholder="Phone Number"
+          value={form.phoneNumber}
+          onChange={handleChange}
+        />
+
+        <input
           type="email"
           name="email"
           placeholder="Email id"
@@ -182,8 +270,10 @@ const TeacherRegister = () => {
           onChange={handleChange}
         />
 
-        {/* Location */}
+        {/* LOCATION */}
+
         <div className="location-row">
+
           <input
             type="text"
             name="location"
@@ -191,10 +281,36 @@ const TeacherRegister = () => {
             value={form.location}
             readOnly
           />
+
           <button className="location-btn" onClick={detectLocation}>
             Detect
           </button>
+
         </div>
+
+        <input
+          type="text"
+          name="area"
+          placeholder="Area"
+          value={form.area}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="taluk"
+          placeholder="Taluk"
+          value={form.taluk}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="district"
+          placeholder="District"
+          value={form.district}
+          onChange={handleChange}
+        />
 
         <input
           type="text"
@@ -220,17 +336,17 @@ const TeacherRegister = () => {
           onChange={handleChange}
         />
 
-        {/* Captcha */}
+        {/* CAPTCHA */}
+
         <div className="captcha-box">
+
           <span className="captcha-text">{captcha}</span>
+
           <div className="captcha-actions">
-            <button type="button" onClick={generateCaptcha}>
-              🔄
-            </button>
-            <button type="button" onClick={speakCaptcha}>
-              🔊
-            </button>
+            <button type="button" onClick={generateCaptcha}>🔄</button>
+            <button type="button" onClick={speakCaptcha}>🔊</button>
           </div>
+
         </div>
 
         <input
@@ -243,9 +359,13 @@ const TeacherRegister = () => {
         <button className="register-btn" onClick={handleSubmit}>
           Register
         </button>
+
       </div>
+
     </div>
+
   );
+
 };
 
 export default TeacherRegister;

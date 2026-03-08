@@ -1,68 +1,57 @@
-import React, { useEffect, useRef } from "react";
-import { Html5Qrcode } from "html5-qrcode";
+import React, { useEffect } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
-const QRScanner = () => {
+import successSound from "../assets/success.wav";
 
-  const scannerRef = useRef(null);
-  const startedRef = useRef(false);
+function QRScanner() {
 
-  useEffect(() => {
+useEffect(()=>{
 
-    if (startedRef.current) return;
-
-    const scanner = new Html5Qrcode("qr-reader");
-    scannerRef.current = scanner;
-
-    scanner.start(
-      { facingMode: "environment" },
-      {
-        fps: 10,
-        qrbox: { width: 220, height: 220 }
-      },
-      (decodedText) => {
-
-        console.log("QR:", decodedText);
-
-      }
-    );
-
-    startedRef.current = true;
-
-    return () => {
-
-      if (scannerRef.current && startedRef.current) {
-
-        scannerRef.current.stop()
-          .then(() => {
-            scannerRef.current.clear();
-            startedRef.current = false;
-          })
-          .catch(() => {});
-
-      }
-
-    };
-
-  }, []);
-
-return (
-
-<div className="scanner-container">
-
-<h2 className="scanner-title">Scan Student QR</h2>
-
-<div className="scanner-card">
-
-<div id="qr-reader"></div>
-
-<div className="scanner-line"></div>
-
-</div>
-
-</div>
-
+const scanner = new Html5QrcodeScanner(
+"reader",
+{ fps:10, qrbox:250 },
+false
 );
 
-};
+scanner.render(async(result)=>{
 
-export default QRScanner;
+console.log("Scanned:",result);
+
+try{
+
+await fetch("http://localhost:5000/api/attendance/mark",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+studentId:result
+})
+});
+
+const audio = new Audio(successSound);
+audio.play();
+
+alert("Attendance Marked");
+
+}catch(err){
+console.log(err);
+}
+
+},(err)=>{});
+
+},[]);
+
+return(
+<div>
+
+<h3>QR Attendance Scanner</h3>
+
+<div id="reader" style={{width:"300px"}}></div>
+
+</div>
+)
+
+}
+
+export default QRScanner

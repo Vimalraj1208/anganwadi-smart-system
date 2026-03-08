@@ -1,0 +1,32 @@
+.dashboard-container{
+  text-align:center;
+  padding:60px;
+}
+
+.dashboard-cards{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  margin-top:40px;
+}
+
+.dashboard-card{
+  background:#ffffff;
+  padding:40px;
+  width:220px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  font-size:18px;
+  font-weight:500;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.dashboard-card:hover{
+  transform:scale(1.05);
+}
+.dashboard-container{
+    min-height: 70vh;
+    padding: 60px;
+    text-align: center;
+}

@@ -14,3 +14,16 @@ body, html {
   flex: 1;
   margin-top: 70px;
 }
+html,body{
+  height: 100%;
+  margin: 0;
+}
+.app-container{
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+.main-content{
+  flex:1;
+ 
+}
